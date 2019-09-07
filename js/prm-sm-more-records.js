@@ -1,46 +1,54 @@
 angular.module('viewCustom').controller('prmSmMoreRecords', ['$timeout', 'customService', 'customGoogleAnalytic', '$q', 'prmSearchService', function ($timeout, customService, customGoogleAnalytic, $q, prmSearchService) {
-    /** 
-     * A starting point for clients to be able to affect and use additional records
-     * in the brief record display.
-     * 
-     * options
-     * omitFirstResult  Boolean
-     *  true: removes the first result from each holdings list - so far has always been
-     *  a duplicate in brief testing.
-     *  false: allows the possible duplicate to be displayed
-     * 
-     * availableOnly  Boolean
-     *  true: Filters results that do not have the status of available.
-     *  NB: Overwrites vm.whitelist.statusCodes
-     * 
-     * vm.whitelist Object
-     *  string additions to the lists within each list will only display records
-     *  that have the provided values corresponding
-     *     libraryCodes  Array: codes that new primo internally uses to determine displayed name
-     *     sublocations: codes that new primo internally uses to determine displayed name
-     *     statusCodes: codes that new primo internally uses to determine displayed name
-     *     _availableOnlyCodes: internally used for options.availablOnly flag
-     * 
-     * Granular Filter Control Example:
-     * 
-     *
-     *  var options = {
-     *      omitFirstResult: false,     // shows every record including duplicates
-     *      availableOnly: false,       // now uses vm.whitelist.statusCodes
-     *  };
-     * 
-     *  vm.whitelist = {
-     *      libraryCodes: ['WID', 'GEN', 'WIDLC']
-     *      subLocations: ['GEN', 'Old Widener', 'LAM']
-     *      statusCodes: ['available', 'available_at_institution','check_holdings', 'unavailable']
-     *      _availableOnlyCodes: ['available', 'available_at_institution'],
-     *  };
-    */
+   /**
+    * A starting point for clients to be able to affect and use additional records
+    * in the brief record display.
+    *
+    * options
+    * omitFirstResult  (Boolean)
+    *  true: removes the first result from each holdings list - so far has always been
+    *  a duplicate in brief testing.
+    *  false: allows the possible duplicate to be displayed
+    *
+    * availableOnly  (Boolean)
+    *  true: Filters results that do not have the status of available.
+    *  NB: Overwrites vm.whitelist.statusCodes
+    *
+    * vm.whitelist (Object)
+    *  string additions to the lists within each list will only display records
+    *  that have the provided values corresponding
+    *     libraryCodes  Array: codes that new primo internally uses to determine displayed name
+    *     sublocations: codes that new primo internally uses to determine displayed name
+    *     statusCodes: codes that new primo internally uses to determine displayed name
+    *     _availableOnlyCodes: internally used for options.availablOnly flag
+    *
+    * Granular Filter Control Example:
+    *  var options = {
+    *      omitFirstResult: false,     true shows every record including duplicates, false omits the first record as
+    *                                  often this is a duplicate. The default is left to false for testing on a per
+    *                                  implementation basis.
+    *
+    *      availableOnly: false,       true filters to only use records with the corresponding codes in
+    *                                  vm.whitelist._availableCodes. This will override other filters. false will
+    *                                  attempt other filters.
+    *
+    *
+    *      visible: false,             true to display records, false to visually hide them from brief record view.
+    *                                  NOTE StackMap.js will handle reading the documents record data either way.
+    *  };
+    *
+    *  vm.whitelist = {
+    *      libraryCodes: ['WID', 'GEN', 'WIDLC']
+    *      subLocations: ['GEN', 'Old Widener', 'LAM']
+    *      statusCodes: ['available', 'available_at_institution','check_holdings', 'unavailable']
+    *  };
+   */
+
     var vm = this;
     
     var options = {
         omitFirstResult: true,
         availableOnly: false, 
+        visible: false
     };
 
     vm.whitelist = {
@@ -88,6 +96,15 @@ angular.module('viewCustom').controller('prmSmMoreRecords', ['$timeout', 'custom
     vm.onCustomLinkClick = function (availability) {
         // your link click code goes here.
         return false;
+    };
+
+    vm.getDisplay = function () {
+        if (options.visible === false) {
+            return 'none';
+        }
+        if (options.visible === true) {
+            return 'block';
+        }
     };
 }]);
 

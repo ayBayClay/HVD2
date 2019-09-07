@@ -1,7 +1,7 @@
 <div ng-repeat="entry in vm.sm_holdings track by $index" 
     layout="row" layout-align="start start"
     class="layout-align-start-start layout-row">
-    <div layout="flex" class="layout-row">
+    <div layout="flex" class="layout-row" ng-style="{display: vm.getDisplay()}">
         <prm-icon ng-if="vm.parentCtrl.isPhysical($index, vm.delivery)" 
             svg-icon-set="primo-ui" 
             availability-type="" 
